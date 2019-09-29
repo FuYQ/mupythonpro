@@ -1,0 +1,64 @@
+# coding=gbk
+import re
+import time
+import urllib.request
+
+import requests
+from bs4 import BeautifulSoup
+
+headers={
+    'cookie' : 'miid=1296267545453648768; t=b4d385e2145f596a67961e4dd08e9a8f; cna=pqwcFXxbJjACAXWIA7AFEfA8; thw=cn; tracknick=tb487881011; lgc=tb487881011; _cc_=UIHiLt3xSw%3D%3D; tg=0; enc=%2FTqA3gAexHOKU0cyPYbSWM1pGS8vgnlEK3EMnkYd2T%2BlB%2BJh18hxryREG48c%2BYmdk7yfvbSMCBDQExP23eUm3w%3D%3D; hng=CN%7Czh-CN%7CCNY%7C156; x=e%3D1%26p%3D*%26s%3D0%26c%3D0%26f%3D0%26g%3D0%26t%3D0%26__ll%3D-1%26_ato%3D0; cookie2=19ef67fdfc3f433776e5e9cafaf6a8ea; v=0; _tb_token_=08b7e3e7e183; _m_h5_tk=62383241b06635c64b07942e50e47d9d_1562004576179; _m_h5_tk_enc=0465da475a8335f8fd8d9ef6bb280a71; unb=4235284520; sg=101; _l_g_=Ug%3D%3D; skt=c571ae590b7580cb; cookie1=AnQIvxj44XbyESoVNTVtwfJRB8W%2BbAPV%2BVZMWhAghjk%3D; csg=23f40375; uc3=vt3=F8dBy34cs3fc7ebsEqk%3D&id2=Vy67WD1MZomrsw%3D%3D&nk2=F5RBzeKtOazPVJc%3D&lg2=UtASsssmOIJ0bQ%3D%3D; existShop=MTU2MTk5NTE3MQ%3D%3D; dnk=tb487881011; _nk_=tb487881011; cookie17=Vy67WD1MZomrsw%3D%3D; mt=ci=21_1; uc1=cookie14=UoTaGdT0tHdY5w%3D%3D&lng=zh_CN&cookie16=VT5L2FSpNgq6fDudInPRgavC%2BQ%3D%3D&existShop=false&cookie21=VFC%2FuZ9aj3yE&tag=8&cookie15=UIHiLt3xD8xYTw%3D%3D&pas=0; whl=-1%260%260%261561995222497; isg=BHNzJqpkKgCWtOesccf13ZRUAnddACwkF8iwAyUQzxLJJJPGrXiXutG23hRvn19i; l=bBMxcfBPv539-OTkBOCanurza77OSIRYYuPzaNbMi_5K-6T_2qQOkAuQFF96Vj5Rs4YB4G2npwJ9-etkq',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'
+}
+
+paqucishu=0
+def get_one_page(url,key):
+    url.encode("UTF-8")
+    # print(url)
+    urls=requests.get(url,headers=headers)
+    urls=urls.text.encode("UTF-8")
+    # print(url)
+    # print(urls)
+    soup=BeautifulSoup(urls,"html.parser")
+    # print(soup)
+    print(soup)
+    zhengze='"pic_url":"//(.*?)",'
+    zhengze_mingzi='"raw_title":"(.*?)",'
+    zhengze_price='"view_price":"([0-9]+\\.[0-9]+?)",'
+    imgs=re.compile(zhengze).findall(str(soup))
+    mingzi=re.compile(zhengze_mingzi).findall(str(soup))
+    price=re.compile(zhengze_price).findall(str(soup))
+
+    global paqucishu
+    ll=0
+    fo=open('E:\\SparkÑ§Ï°\\myPythonproject\\ÌÔ±¦×¥È¡\\result.txt', mode='a+', encoding='utf-8')
+    for img,mingzi,price in zip(imgs,mingzi,price):
+        if ll<10:
+            img="https://"+img
+            fo.writelines(key +"\t"+mingzi+"\t"+price+"\n")
+        ll=ll+1
+    fo.close();
+
+        # try:
+        #     time.sleep(0.2)
+        #     file="E:/ÌÔ±¦Í¼×¥È¡/ÁªºÏÀû»ª/"+str(mingzi)+".jpg"
+        #     urllib.request.urlretrieve(img,filename=file)
+        #     print("ÅÀÈ¡"+str(paqucishu)+"³É¹¦")
+        #     paqucishu=int(paqucishu)+1
+        # except Exception as result:
+        #     print('Í¼Æ¬ÏÂÔØÊ§°Ü' + str(result))
+def get_one_pages():
+    keylist=['·ÉÀûÆÖ¹Ù·½Æì½¢µê','±ÈÈð¼ªÆì½¢µê','TW¹Ù·½Æì½¢µê','ÅµÓÅÄÜÆì½¢µê','Á¼Æ·ÆÌ×ÓÆì½¢µê','Âþ»¨Æì½¢µê','½ð¾ÅÆì½¢µê','ÍõÐ¡¶þÆì½¢µê','Ë®¾üÆì½¢µê','ÃÀ¼´¹Ù·½Æì½¢µê','skullcandy¹Ù·½Æì½¢µê','ÌìÃ¨ÈýÐÇ¹Ù·½Æì½¢µê','cuir¿û¶ù»¯×±Æ·Æì½¢µê','mckÆì½¢µê','einÆì½¢µê','ÖªÎ¶¹Û¹Ù·½Æì½¢µê','Ñ©¼¡¾«¹Ù·½Æì½¢µê','Á¦Ê¿Æì½¢µê','ÅµÈðÆì½¢µê','ÌÌÆì½¢µê','°²ÄÍ³ÛÆì½¢µê','×ÔàË¹øÆì½¢µê','Å·ÆÕÕÕÃ÷¹Ù·½Æì½¢µê','º£¶û¹Ù·½Æì½¢µê','±´åûÆì½¢µê','¾©¶«É¼É¼¹Ù·½Æì½¢µê','tigrissoÆì½¢µê','Å®Î×ºÍÆïÊ¿Æì½¢µê','isdgº£ÍâÆì½¢µê','ÐÓ»¨Â¥Ê³Æ·Æì½¢µê','POLAº£ÍâÆì½¢µê','Ê¤µÀ¹Ù·½Æì½¢µê','Ò×¹ûÆì½¢µê','ÈýÐÇ¼ÒµçÆì½¢µê','»ãÈÊ¹Ù·½Æì½¢µê','¼Î»ªÊ³Æ·Æì½¢µê','Ç§È¤»á¹Ù·½Æì½¢µê','´óÂóÍø¹Ù·½Æì½¢µê','²¨¶ÙÆì½¢µê','¶¥¹Ï¹ÏÆ·ÅÆÆì½¢µê','°ëÄ¶»¨ÌïÆì½¢µê','ÄÝÎ¬ÑÅÆì½¢µê','goodhealthº£ÍâÆì½¢µê','µÙ¿ÉÒÁ·þÊÎÆì½¢µê','MDCº£ÍâÆì½¢µê','Â·Ë¹Æì½¢µê','ÌÔ±¦ËÑË÷¹ãÖÝ¾Æ¼ÒÆì½¢µê','½õ¶ÈÆì½¢µê','Çå·ç¹Ù·½Æì½¢µê','Áèµ¤ÄÈÆì½¢µê','ÄÍÍþ¿Ë¹Ù·½Æì½¢µê','ÐÂÑÅÊ³Æ·Æì½¢µê','ÂíÀ­¶¡¹Ù·½Æì½¢µê','CANIDAE¿¨±Èº£ÍâÆì½¢µê','º£Ù³¶÷ÒþÐÎÑÛ¾µÆì½¢µê','Ã×Æì¹Ù·½Æì½¢µê','Ãú¹ûÊÀ¼ÎÆì½¢µê','Å£°ÙËêÆì½¢µê','WISÆì½¢µê','¿í¸£Æì½¢µê','ÈÙ»ªÊ³Æ·Æì½¢µê','Ã°¸öÅÝÆì½¢µê','¹ÅÄ¥·»Æì½¢µê','Æô³õÆì½¢µê','²¼ÀÊÊæ¸ñÆì½¢µê','³±Ïã´åÊ³Æ·Æì½¢µê','ÃÀÎ¶Á¬Á¬ÉúÏÊÆì½¢µê','ÐËÊ¢Æì½¢µê','ZUCZUG¹Ù·½Æì½¢µê','ampleurº£ÍâÆì½¢µê','Â¶°²ÊÊ¹Ù·½Æì½¢µê','¹ÚÄÜ¹Ù·½Æì½¢µê','×óÑÕÓÒÉ«Æì½¢µê','ÌØ²½¹Ù·½Æì½¢µê','ÑÅÅàº£ÍâÆì½¢µê','ÕÀåûÆì½¢µê','ÀÖÂóµãÆì½¢µê','Ã¨Ì«×ÓÊýÂëÆì½¢µê','ilovechocÆì½¢µê','½­ÄÏÏÈÉúÆì½¢µê','UH»¯×±Æ·Æì½¢µê','µöÓãÍõÆì½¢µê','pasokÆì½¢µê','ASICSÆì½¢µê','PANMAXÆì½¢µê','º£¶ûÂüË¹Æì½¢µê','»ØÍ·¿ÍÊ³Æ·Æì½¢µê','°Û²Ý¼¯¹Ù·½Æì½¢µê','zhrÆì½¢µê','ÏÊ»ã¾ÓÆì½¢µê','ÕæðªÆì½¢µê','honeycareÆì½¢µê','ÂþÓéÎÄ»¯Í¼ÊéÆì½¢µê','½ðÈýËþÄÚÒÂÆì½¢µê','¹ÈµÇÆì½¢µê','ÂóµÏÍõ×ÓÆì½¢µê','ÒÁÀû±ùä¿ÁÜÆì½¢µê','ÖÜÎåÎåÆì½¢µê','ÉÏË®¾®Ê³Æ·Æì½¢µê','´º¼ÍÆì½¢µê','52025ÄÚÒÂÆì½¢µê','ÈÙ³ÏÆì½¢µê','ÀîÒ½Éú»¯×±Æ·Æì½¢µê','ÎïÉúÎïÆì½¢µê','ËÙÆ·Æì½¢µê','ºÃÖ®Î¶¹Ù·½Æì½¢µê','¿ìÀÖÅÜ¹Ù·½Æì½¢µê','ÌìÃÀÒâ¹Ù·½Æì½¢µê','lumiÆì½¢µê','½ðÀûÀ´Å®°üÆì½¢µê','Ï¾²½Ê¿¹Ù·½Æì½¢µê','µÂÓÓÆì½¢µê','ÕãÎ÷ÐìÏãÆì½¢µê','°ØÆ·Æì½¢µê','Êæ´ïÔ´ÌìÃ¨Æì½¢µê','Ë¼Î¶ÍõÊ³Æ·Æì½¢µê','Î¶¶àÃÀÆì½¢µê','Ììºâ±¦Æì½¢µê','Ä½Ë¼Æì½¢µê','pokeeÆì½¢µê','ËÄÖÞÊ³Æ·Æì½¢µê','nexycoÄÎÞ¢Æì½¢µê','Í¾»¢¹Ù·½Æì½¢µê','lalaboboÆì½¢µê','ÖÐÁ¸Ê³Æ·Æì½¢µê','ÎÒÁúÆì½¢µê','»ÝÊÏº£ÍâÆì½¢µê','HARRIETº£ÈðÌØÆì½¢µê','ÃÀË¹µÙ¿Ëº£ÍâÆì½¢µê','¶à²ÊÀöÈËÆì½¢µê','°®±¦ÀÖÄ¸Ó¤Æì½¢µê','it¹Ù·½Æì½¢µê','medicuraº£ÍâÆì½¢µê','²¨Á¦¹Ù·½Æì½¢µê','a1°®ÒÝÆì½¢µê','jifro½àÜ½ÈáÆì½¢µê','earthsbestÆì½¢µê','kehealÆì½¢µê','RedBullº£ÍâÆì½¢µê','ÉÆ±ØÕ÷´óÒ©·¿Æì½¢µê','»Ë³¯×Ì²¹ÌÃÆì½¢µê','mytexÆì½¢µê','³õÓïÆì½¢µê','¼«³è¼ÒÆì½¢µê','¾©¶«ÌìÃÀÒâÆì½¢µê','½ðÔ·Æì½¢µê','Ä§ÏãÆì½¢µê','TUMIÆì½¢µê','lackpardÆì½¢µê','konÆì½¢µê','ÀöÈËÀö×±º£ÍâÆì½¢µê','µÃÅ·ÄÈÅ®Ð¬Æì½¢µê','µÂµÂÎ¬Ü½Æì½¢µê','ºÌ¸ÊÆì½¢µê','ÄÍ¼ªË¹³èÎïÊ³Æ·Æì½¢µê','ÁëÄÏÐÂ±¦ÌÃÆì½¢µê','ÌñÃÎÀ³Æì½¢µê','LibresseÆì½¢µê','YEE¹Ù·½Æì½¢µê','ÈÙÒ«¹Ù·½Æì½¢µê','½¡µÃÀÖÆì½¢µê','Ë¼ÀÖÖÇÆì½¢µê','Ê®ÔÂ½á¾§Æì½¢µê','²ßÀ¨Æì½¢µê','ÅÉ°îÅ«Æì½¢µê','¾©ÈóÕäÖéÆì½¢µê','scofield¹Ù·½Æì½¢µê','kakaofriendsÆì½¢µê','ºèÐÇ¶û¿Ë¹Ù·½Æì½¢µê','allolughÆì½¢µê','É­Ìï¹Ù·½Æì½¢µê','orgainº£ÍâÆì½¢µê','ÒÁ·ôÈªÆì½¢µê','GNCº£ÍâÆì½¢µê','Ü·¶¯Æì½¢µê','±ËË¼Æì½¢µê','TOVAOONÆì½¢µê','³ÈÀÖ¹¤·»Æì½¢µê','ÇÉ²¯Æì½¢µê','ÓÀè±Æì½¢µê','nauticaÍ¯×°Æì½¢µê','¿µ±¦Æì½¢µê','µÀÒ×öÎÎïÁªÍøÆì½¢µê','É­´ï¹Ù·½Æì½¢µê','°®ÊÓ½ÜÆì½¢µê','Ê¥µØÀ³Æì½¢µê','ÇÉÂÞÆì½¢µê','Ò¼ÄîÆì½¢µê','Ë«¹µ¹Ù·½Æì½¢µê','ENEOMEYº£ÍâÆì½¢µê','µÙÂå¿ËÆì½¢µê','Å·Á¦Ä·Æì½¢µê','ÕäÉÐÃ×Æì½¢µê','ËÄð©Ê³Æ·Æì½¢µê','¼¡Èâ¿Æ¼¼º£ÍâÆì½¢µê','ÓùÄà·»Æì½¢µê','¿­ÀÖÊ¯Æì½¢µê']
+    # keylist=['ÁªºÏÀû»ªÆì½¢µê','3CE¹Ù·½Æì½¢µê','²¨ÆæÍøÆì½¢µê']
+    for k in range(0,len(keylist)):
+        key = keylist[k]
+        # print(key)
+        key_name=urllib.request.quote(key)
+        url="https://s.taobao.com/search?q="+key_name+"&s="+str(int(0)*44)
+        print(url)
+        time.sleep(1)
+        get_one_page(url,key)
+
+if __name__ == '__main__':
+    # print(os.getcwd())
+    get_one_pages()
